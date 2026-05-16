@@ -11,6 +11,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Routes
+app.get("/", (req, res) => {
+  res.send("Backend Working ✅");
+});
+
 app.use("/api", routes);
 
 // Global Error Handling Middleware
