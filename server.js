@@ -1,17 +1,21 @@
 require("dotenv").config();
-const http = require("http");
+
 const app = require("./app");
 const connectDB = require("./config/dbConfig");
 
-const PORT = process.env.PORT || 5000;
+let isConnected = false;
 
-const startServer = async () => {
-	await connectDB();
+module.exports = async (req, res) => {
+  try {
+    if (!isConnected) {
+      await connectDB();
+      isConnected = true;
+      console.log("✅ Database Connected");
+    }
 
-	const server = http.createServer(app);
-	server.listen(PORT, () => {
-		console.log(`🚀 Server is running on port ${PORT}`);
-	});
+    return app(req, res);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server Error");
+  }
 };
-
-startServer();
